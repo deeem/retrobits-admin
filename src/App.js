@@ -1,11 +1,12 @@
 import React from 'react';
 import './App.css';
+import Layout from './components/Layout/Layout';
 
 function App() {
   return (
-    <div className="App">
-      <h1>Lorem Ipsum</h1>
-    </div>
+    <Layout>
+      Hello Page!
+    </Layout>
   );
 }
 
