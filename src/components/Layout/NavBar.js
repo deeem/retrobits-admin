@@ -14,12 +14,27 @@ import {
 } from "@material-ui/core";
 
 const NavBar = props => {
+  const DashboardLink = React.forwardRef((props, ref) => (
+    <NavLink to="/" {...props} innerRef={ref} />
+  ));
+
+  const BitsLink = React.forwardRef((props, ref) => (
+    <NavLink to="/bits" {...props} innerRef={ref} />
+  ));
+
+  const GamesLink = React.forwardRef((props, ref) => (
+    <NavLink to="/games" {...props} innerRef={ref} />
+  ));
+
+  const UsersLink = React.forwardRef((props, ref) => (
+    <NavLink to="/users" {...props} innerRef={ref} />
+  ));
+
   return (
     <MenuList>
       <MenuItem
         button
-        component={NavLink}
-        to="/"
+        component={DashboardLink}
         selected={"/" === props.location.pathname}
       >
         <ListItemIcon>
@@ -30,8 +45,7 @@ const NavBar = props => {
 
       <MenuItem
         button
-        component={NavLink}
-        to="/bits"
+        component={BitsLink}
         selected={"/bits" === props.location.pathname}
       >
         <ListItemIcon>
@@ -42,8 +56,7 @@ const NavBar = props => {
 
       <MenuItem
         button
-        component={NavLink}
-        to="/games"
+        component={GamesLink}
         selected={"/games" === props.location.pathname}
       >
         <ListItemIcon>
@@ -54,8 +67,7 @@ const NavBar = props => {
 
       <MenuItem
         button
-        component={NavLink}
-        to="/users"
+        component={UsersLink}
         selected={"/users" === props.location.pathname}
       >
         <ListItemIcon>
