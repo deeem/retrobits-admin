@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, withRouter } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import "./App.css";
 import Layout from "./components/Layout/Layout";
 import Dashboard from "./pages/Dashboard";
@@ -8,6 +8,7 @@ import Games from "./pages/Games";
 import Users from "./pages/Users";
 
 function App() {
+
   return (
     <Layout>
       <Switch>
@@ -20,4 +21,4 @@ function App() {
   );
 }
 
-export default withRouter(App);
+export default App;
