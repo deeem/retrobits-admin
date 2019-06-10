@@ -1,6 +1,5 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import "./App.css";
 import Layout from "./components/Layout/Layout";
 import Dashboard from "./pages/Dashboard";
 import Bits from "./pages/Bits";
