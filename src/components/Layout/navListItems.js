@@ -9,33 +9,33 @@ import AssigmentIndIcon from "@material-ui/icons/AssignmentInd";
 import { NavLink } from "react-router-dom";
 
 export const mainListItems = (
-  <div>
-    <ListItem button>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItem>
+    <div>
+      <ListItem button component={NavLink} to="/">
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Dashboard" />
+      </ListItem>
 
-    <ListItem button>
-      <ListItemIcon>
-        <OnDemandVideoIcon />
-      </ListItemIcon>
-      <ListItemText primary="Bits" />
-    </ListItem>
+      <ListItem button component={NavLink} to="/bits" selected>
+        <ListItemIcon>
+          <OnDemandVideoIcon />
+        </ListItemIcon>
+        <ListItemText primary="Bits" />
+      </ListItem>
 
-    <ListItem button>
-      <ListItemIcon>
-        <VideoGameAssetIcon />
-      </ListItemIcon>
-      <ListItemText primary="Games" />
-    </ListItem>
+      <ListItem button component={NavLink} to="/games">
+        <ListItemIcon>
+          <VideoGameAssetIcon />
+        </ListItemIcon>
+        <ListItemText primary="Games" />
+      </ListItem>
 
-    <ListItem button>
-      <ListItemIcon>
-        <AssigmentIndIcon />
-      </ListItemIcon>
-      <ListItemText primary="Users" />
-    </ListItem>
-  </div>
-);
+      <ListItem button component={NavLink} to="/users">
+        <ListItemIcon>
+          <AssigmentIndIcon />
+        </ListItemIcon>
+        <ListItemText primary="Users" />
+      </ListItem>
+    </div>
+  );
