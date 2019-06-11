@@ -8,7 +8,11 @@ import {
   TableHead,
   TableRow,
   TableFooter,
-  TablePagination
+  TablePagination,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
 } from "@material-ui/core";
 import GamesTablePaginationActions from "../components/Games/GamesTablePaginationActions";
 
@@ -19,7 +23,8 @@ class Games extends Component {
     error: false,
     pagination: {},
     page: false,
-    per_page: 10
+    per_page: 10,
+    platform: ""
   };
 
   componentDidMount() {
@@ -30,7 +35,9 @@ class Games extends Component {
     const shouldFetch =
       (prevState.page !== undefined && prevState.page !== this.state.page) ||
       (prevState.per_page !== undefined &&
-        prevState.per_page !== this.state.per_page);
+        prevState.per_page !== this.state.per_page) ||
+      (prevState.platform !== undefined &&
+        prevState.platform !== this.state.platform);
 
     if (shouldFetch) {
       this.fetch();
@@ -51,6 +58,13 @@ class Games extends Component {
       params = {
         ...params,
         page_size: this.state.per_page
+      };
+    }
+
+    if (this.state.platform) {
+      params = {
+        ...params,
+        ["filter[platform]"]: this.state.platform
       };
     }
 
@@ -104,6 +118,13 @@ class Games extends Component {
     this.setState({
       page: 1,
       per_page: event.target.value
+    });
+  };
+
+  handlePlatformChange = event => {
+    this.setState({
+      page: 1,
+      platform: event.target.value
     });
   };
 
@@ -166,7 +187,35 @@ class Games extends Component {
       table = <p>Loading...</p>;
     }
 
-    return <Paper>{table}</Paper>;
+    let selector = (
+      <FormControl>
+        <InputLabel htmlFor="age-simple">Platform</InputLabel>
+        <Select
+          value={this.state.platform}
+          onChange={this.handlePlatformChange}
+          inputProps={{
+            name: "age",
+            id: "age-simple"
+          }}
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          <MenuItem value={"zx-spectrum"}>ZX-Spectrum</MenuItem>
+          <MenuItem value={"nes"}>Nintendo</MenuItem>
+          <MenuItem value={"snes"}>Super Nintendo</MenuItem>
+          <MenuItem value={"sega"}>Sega Mega Drive</MenuItem>
+        </Select>
+      </FormControl>
+    );
+
+    return (
+      <Paper>
+        {selector}
+
+        {table}
+      </Paper>
+    );
   }
 }
 
