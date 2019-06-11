@@ -9,6 +9,7 @@ import {
   TableRow,
   TableFooter,
   TablePagination,
+  TableSortLabel,
   FormControl,
   InputLabel,
   Select,
@@ -24,7 +25,8 @@ class Games extends Component {
     pagination: {},
     page: false,
     per_page: 10,
-    platform: ""
+    platform: "",
+    titleOrder: "asc"
   };
 
   componentDidMount() {
@@ -37,7 +39,9 @@ class Games extends Component {
       (prevState.per_page !== undefined &&
         prevState.per_page !== this.state.per_page) ||
       (prevState.platform !== undefined &&
-        prevState.platform !== this.state.platform);
+        prevState.platform !== this.state.platform) ||
+      (prevState.titleOrder !== undefined &&
+        prevState.titleOrder !== this.state.titleOrder);
 
     if (shouldFetch) {
       this.fetch();
@@ -65,6 +69,20 @@ class Games extends Component {
       params = {
         ...params,
         ["filter[platform]"]: this.state.platform
+      };
+    }
+
+    if (this.state.titleOrder === "asc") {
+      params = {
+        ...params,
+        sort: "title"
+      };
+    }
+
+    if (this.state.titleOrder === "desc") {
+      params = {
+        ...params,
+        sort: "-title"
       };
     }
 
@@ -128,6 +146,14 @@ class Games extends Component {
     });
   };
 
+  handleSortTitle = () => {
+    console.log(this.state.titleOrder);
+    this.setState({
+      page: 1,
+      titleOrder: this.state.titleOrder === "asc" ? "desc" : "asc"
+    });
+  };
+
   render() {
     const paginationActions = () => {
       return (
@@ -154,7 +180,15 @@ class Games extends Component {
           <TableRow>
             <TableCell>ID</TableCell>
             <TableCell align="right">Platform</TableCell>
-            <TableCell>Title</TableCell>
+            <TableCell>
+              <TableSortLabel
+                active={true}
+                direction={"asc"}
+                onClick={this.handleSortTitle}
+              >
+                Title
+              </TableSortLabel>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
