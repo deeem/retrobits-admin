@@ -17,15 +17,49 @@ class Games extends Component {
     games: [],
     loading: true,
     error: false,
-    pagination: {}
+    pagination: {},
+    page: false,
+    per_page: 10
   };
 
   componentDidMount() {
-    this.fetchGames();
+    this.fetch();
   }
 
-  fetchGames = params => {
-    Axios.get("http://127.0.0.1:8000/api/admin/games", { params })
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const shouldFetch =
+      (prevState.page !== undefined && prevState.page !== this.state.page)
+      || (prevState.per_page !== undefined && prevState.per_page !== this.state.per_page);
+
+    if (shouldFetch) {
+      this.fetch();
+    }
+  }
+
+  combineFetchParams = () => {
+    let params = {};
+
+    if (this.state.page) {
+      params = {
+        ...params,
+        page: this.state.page
+      };
+    }
+
+    if (this.state.per_page) {
+      params = {
+        ...params,
+        page_size: this.state.per_page
+      };
+    }
+
+    return params;
+  };
+
+  fetch = () => {
+    Axios.get("http://127.0.0.1:8000/api/admin/games", {
+      params: this.combineFetchParams()
+    })
       .then(response => {
         this.setState({
           games: response.data.data,
@@ -52,11 +86,19 @@ class Games extends Component {
 
   handlePaginate = url => {
     if (url) {
-      this.setState({ loading: true });
-
       const page = new URL(url).searchParams.get("page");
-      this.fetchGames({ page });
+      this.setState({
+        page: page,
+        loading: true
+      });
     }
+  };
+
+  handleChangeRowsPerPage = event => {
+    this.setState({
+      page: 1,
+      per_page: event.target.value
+    });
   };
 
   render() {
@@ -97,6 +139,7 @@ class Games extends Component {
               count={this.state.pagination.count}
               page={this.state.pagination.page}
               rowsPerPage={this.state.pagination.rowsPerPage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
               ActionsComponent={paginationActions}
             />
           </TableRow>
@@ -105,12 +148,10 @@ class Games extends Component {
     );
 
     if (this.state.loading) {
-        table = (<p>Loading...</p>);
+      table = <p>Loading...</p>;
     }
 
-    return <Paper>
-        {table}
-    </Paper>;
+    return <Paper>{table}</Paper>;
   }
 }
 
