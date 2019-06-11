@@ -13,6 +13,7 @@ import {
   FormControl,
   InputLabel,
   Select,
+  Input,
   MenuItem
 } from "@material-ui/core";
 import GamesTablePaginationActions from "../components/Games/GamesTablePaginationActions";
@@ -25,8 +26,10 @@ class Games extends Component {
     pagination: {},
     page: false,
     per_page: 10,
+    last_page: false,
     platform: "",
-    titleOrder: "asc"
+    titleOrder: "asc",
+    search_text: false
   };
 
   componentDidMount() {
@@ -41,7 +44,9 @@ class Games extends Component {
       (prevState.platform !== undefined &&
         prevState.platform !== this.state.platform) ||
       (prevState.titleOrder !== undefined &&
-        prevState.titleOrder !== this.state.titleOrder);
+        prevState.titleOrder !== this.state.titleOrder) ||
+      (prevState.search_text !== undefined &&
+        prevState.search_text !== this.state.search_text);
 
     if (shouldFetch) {
       this.fetch();
@@ -86,6 +91,13 @@ class Games extends Component {
       };
     }
 
+    if (this.state.search_text) {
+      params = {
+        ...params,
+        ["filter[title]"]: this.state.search_text
+      };
+    }
+
     return params;
   };
 
@@ -100,6 +112,7 @@ class Games extends Component {
             count: response.data.meta.total,
             page: response.data.meta.current_page,
             rowsPerPage: response.data.meta.per_page,
+            last_page: response.data.meta.last_page,
             first: this.extractPageFromUrl(response.data.links.first),
             last: this.extractPageFromUrl(response.data.links.last),
             next: this.extractPageFromUrl(response.data.links.next),
@@ -135,22 +148,32 @@ class Games extends Component {
   handleChangeRowsPerPage = event => {
     this.setState({
       page: 1,
-      per_page: event.target.value
+      per_page: event.target.value,
+      loading: true
     });
   };
 
   handlePlatformChange = event => {
     this.setState({
       page: 1,
-      platform: event.target.value
+      platform: event.target.value,
+      loading: true
     });
   };
 
   handleSortTitle = () => {
-    console.log(this.state.titleOrder);
     this.setState({
       page: 1,
-      titleOrder: this.state.titleOrder === "asc" ? "desc" : "asc"
+      titleOrder: this.state.titleOrder === "asc" ? "desc" : "asc",
+      loading: true
+    });
+  };
+
+  handleChangeSearch = event => {
+    console.log(event.target.value);
+    this.setState({
+      page: 1,
+      search_text: event.target.value
     });
   };
 
@@ -170,6 +193,8 @@ class Games extends Component {
           clickedPrev={() =>
             this.handleOnChangePage(this.state.pagination.prev)
           }
+          page={this.state.pagination.page}
+          lastPage={this.state.pagination.last_page}
         />
       );
     };
@@ -183,7 +208,7 @@ class Games extends Component {
             <TableCell>
               <TableSortLabel
                 active={true}
-                direction={"asc"}
+                direction={this.state.titleOrder}
                 onClick={this.handleSortTitle}
               >
                 Title
@@ -206,7 +231,7 @@ class Games extends Component {
           <TableRow>
             <TablePagination
               count={this.state.pagination.count}
-              page={this.state.pagination.page}
+              page={this.state.pagination.page - 1}
               rowsPerPage={this.state.pagination.rowsPerPage}
               onChangeRowsPerPage={this.handleChangeRowsPerPage}
               onChangePage={this.handleOnChangePage}
@@ -223,13 +248,13 @@ class Games extends Component {
 
     let selector = (
       <FormControl>
-        <InputLabel htmlFor="age-simple">Platform</InputLabel>
+        <InputLabel htmlFor="platform">Platform</InputLabel>
         <Select
           value={this.state.platform}
           onChange={this.handlePlatformChange}
           inputProps={{
-            name: "age",
-            id: "age-simple"
+            name: "platform",
+            id: "platform"
           }}
         >
           <MenuItem value="">
@@ -246,6 +271,12 @@ class Games extends Component {
     return (
       <Paper>
         {selector}
+
+        <Input
+          value={this.search_text}
+          placeholder={"search by title"}
+          onChange={this.handleChangeSearch}
+        />
 
         {table}
       </Paper>
