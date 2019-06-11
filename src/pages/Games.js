@@ -28,8 +28,9 @@ class Games extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const shouldFetch =
-      (prevState.page !== undefined && prevState.page !== this.state.page)
-      || (prevState.per_page !== undefined && prevState.per_page !== this.state.per_page);
+      (prevState.page !== undefined && prevState.page !== this.state.page) ||
+      (prevState.per_page !== undefined &&
+        prevState.per_page !== this.state.per_page);
 
     if (shouldFetch) {
       this.fetch();
@@ -67,10 +68,10 @@ class Games extends Component {
             count: response.data.meta.total,
             page: response.data.meta.current_page,
             rowsPerPage: response.data.meta.per_page,
-            first: response.data.links.first,
-            last: response.data.links.last,
-            next: response.data.links.next,
-            prev: response.data.links.prev
+            first: this.extractPageFromUrl(response.data.links.first),
+            last: this.extractPageFromUrl(response.data.links.last),
+            next: this.extractPageFromUrl(response.data.links.next),
+            prev: this.extractPageFromUrl(response.data.links.prev)
           },
           loading: false,
           error: false
@@ -84,14 +85,19 @@ class Games extends Component {
       });
   };
 
-  handlePaginate = url => {
+  extractPageFromUrl = url => {
     if (url) {
-      const page = new URL(url).searchParams.get("page");
-      this.setState({
-        page: page,
-        loading: true
-      });
+      return new URL(url).searchParams.get("page");
     }
+
+    return url;
+  };
+
+  handleOnChangePage = page => {
+    this.setState({
+      page: page,
+      loading: true
+    });
   };
 
   handleChangeRowsPerPage = event => {
@@ -105,10 +111,18 @@ class Games extends Component {
     const paginationActions = () => {
       return (
         <GamesTablePaginationActions
-          clickedFirst={() => this.handlePaginate(this.state.pagination.first)}
-          clickedLast={() => this.handlePaginate(this.state.pagination.last)}
-          clickedNext={() => this.handlePaginate(this.state.pagination.next)}
-          clickedPrev={() => this.handlePaginate(this.state.pagination.prev)}
+          clickedFirst={() =>
+            this.handleOnChangePage(this.state.pagination.first)
+          }
+          clickedLast={() =>
+            this.handleOnChangePage(this.state.pagination.last)
+          }
+          clickedNext={() =>
+            this.handleOnChangePage(this.state.pagination.next)
+          }
+          clickedPrev={() =>
+            this.handleOnChangePage(this.state.pagination.prev)
+          }
         />
       );
     };
@@ -140,6 +154,7 @@ class Games extends Component {
               page={this.state.pagination.page}
               rowsPerPage={this.state.pagination.rowsPerPage}
               onChangeRowsPerPage={this.handleChangeRowsPerPage}
+              onChangePage={this.handleOnChangePage}
               ActionsComponent={paginationActions}
             />
           </TableRow>
