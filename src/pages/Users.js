@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../axios-retrobits";
 import {
   Paper,
   Table,
@@ -45,7 +45,7 @@ const Users = () => {
       setIsLoading(true);
       setIsError(false);
       try {
-        const response = await axios("http://127.0.0.1:8000/api/admin/users", {
+        const response = await axios("users", {
           params: combineFetchParams()
         });
         setRows(response.data.data);

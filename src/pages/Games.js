@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Axios from "axios";
+import axios from "../axios-retrobits";
 import {
   Paper,
   Table,
@@ -102,7 +102,7 @@ class Games extends Component {
   };
 
   fetch = () => {
-    Axios.get("http://127.0.0.1:8000/api/admin/games", {
+    axios.get("games", {
       params: this.combineFetchParams()
     })
       .then(response => {
