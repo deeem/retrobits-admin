@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import axios from "../axios-retrobits";
+import React, { Component } from 'react'
+import axios from '../axios-retrobits'
 import {
   Paper,
   Table,
@@ -14,9 +14,9 @@ import {
   InputLabel,
   Select,
   Input,
-  MenuItem
-} from "@material-ui/core";
-import GamesTablePaginationActions from "../components/Games/GamesTablePaginationActions";
+  MenuItem,
+} from '@material-ui/core'
+import GamesTablePaginationActions from '../components/Games/GamesTablePaginationActions'
 
 class Games extends Component {
   state = {
@@ -27,13 +27,13 @@ class Games extends Component {
     page: false,
     per_page: 10,
     last_page: false,
-    platform: "",
-    titleOrder: "asc",
-    search_text: false
-  };
+    platform: '',
+    titleOrder: 'asc',
+    search_text: false,
+  }
 
   componentDidMount() {
-    this.fetch();
+    this.fetch()
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -46,65 +46,66 @@ class Games extends Component {
       (prevState.titleOrder !== undefined &&
         prevState.titleOrder !== this.state.titleOrder) ||
       (prevState.search_text !== undefined &&
-        prevState.search_text !== this.state.search_text);
+        prevState.search_text !== this.state.search_text)
 
     if (shouldFetch) {
-      this.fetch();
+      this.fetch()
     }
   }
 
   combineFetchParams = () => {
-    let params = {};
+    let params = {}
 
     if (this.state.page) {
       params = {
         ...params,
-        page: this.state.page
-      };
+        page: this.state.page,
+      }
     }
 
     if (this.state.per_page) {
       params = {
         ...params,
-        page_size: this.state.per_page
-      };
+        page_size: this.state.per_page,
+      }
     }
 
     if (this.state.platform) {
       params = {
         ...params,
-        ["filter[platform]"]: this.state.platform
-      };
+        'filter[platform]': this.state.platform,
+      }
     }
 
-    if (this.state.titleOrder === "asc") {
+    if (this.state.titleOrder === 'asc') {
       params = {
         ...params,
-        sort: "title"
-      };
+        sort: 'title',
+      }
     }
 
-    if (this.state.titleOrder === "desc") {
+    if (this.state.titleOrder === 'desc') {
       params = {
         ...params,
-        sort: "-title"
-      };
+        sort: '-title',
+      }
     }
 
     if (this.state.search_text) {
       params = {
         ...params,
-        ["filter[title]"]: this.state.search_text
-      };
+        'filter[title]': this.state.search_text,
+      }
     }
 
-    return params;
-  };
+    return params
+  }
 
   fetch = () => {
-    axios.get("games", {
-      params: this.combineFetchParams()
-    })
+    axios
+      .get('games', {
+        params: this.combineFetchParams(),
+      })
       .then(response => {
         this.setState({
           games: response.data.data,
@@ -116,66 +117,65 @@ class Games extends Component {
             first: this.extractPageFromUrl(response.data.links.first),
             last: this.extractPageFromUrl(response.data.links.last),
             next: this.extractPageFromUrl(response.data.links.next),
-            prev: this.extractPageFromUrl(response.data.links.prev)
+            prev: this.extractPageFromUrl(response.data.links.prev),
           },
           loading: false,
-          error: false
-        });
+          error: false,
+        })
       })
       .catch(error => {
         this.setState({
           loading: false,
-          error: false
-        });
-      });
-  };
+          error: false,
+        })
+      })
+  }
 
   extractPageFromUrl = url => {
     if (url) {
-      return new URL(url).searchParams.get("page");
+      return new URL(url).searchParams.get('page')
     }
 
-    return url;
-  };
+    return url
+  }
 
   handleOnChangePage = page => {
     this.setState({
       page: page,
-      loading: true
-    });
-  };
+      loading: true,
+    })
+  }
 
   handleChangeRowsPerPage = event => {
     this.setState({
       page: 1,
       per_page: event.target.value,
-      loading: true
-    });
-  };
+      loading: true,
+    })
+  }
 
   handlePlatformChange = event => {
     this.setState({
       page: 1,
       platform: event.target.value,
-      loading: true
-    });
-  };
+      loading: true,
+    })
+  }
 
   handleSortTitle = () => {
     this.setState({
       page: 1,
-      titleOrder: this.state.titleOrder === "asc" ? "desc" : "asc",
-      loading: true
-    });
-  };
+      titleOrder: this.state.titleOrder === 'asc' ? 'desc' : 'asc',
+      loading: true,
+    })
+  }
 
   handleChangeSearch = event => {
-    console.log(event.target.value);
     this.setState({
       page: 1,
-      search_text: event.target.value
-    });
-  };
+      search_text: event.target.value,
+    })
+  }
 
   render() {
     const paginationActions = () => {
@@ -196,8 +196,8 @@ class Games extends Component {
           page={this.state.pagination.page}
           lastPage={this.state.pagination.last_page}
         />
-      );
-    };
+      )
+    }
 
     let table = (
       <Table>
@@ -240,10 +240,10 @@ class Games extends Component {
           </TableRow>
         </TableFooter>
       </Table>
-    );
+    )
 
     if (this.state.loading) {
-      table = <p>Loading...</p>;
+      table = <p>Loading...</p>
     }
 
     let selector = (
@@ -253,20 +253,20 @@ class Games extends Component {
           value={this.state.platform}
           onChange={this.handlePlatformChange}
           inputProps={{
-            name: "platform",
-            id: "platform"
+            name: 'platform',
+            id: 'platform',
           }}
         >
           <MenuItem value="">
             <em>None</em>
           </MenuItem>
-          <MenuItem value={"zx-spectrum"}>ZX-Spectrum</MenuItem>
-          <MenuItem value={"nes"}>Nintendo</MenuItem>
-          <MenuItem value={"snes"}>Super Nintendo</MenuItem>
-          <MenuItem value={"sega"}>Sega Mega Drive</MenuItem>
+          <MenuItem value={'zx-spectrum'}>ZX-Spectrum</MenuItem>
+          <MenuItem value={'nes'}>Nintendo</MenuItem>
+          <MenuItem value={'snes'}>Super Nintendo</MenuItem>
+          <MenuItem value={'sega'}>Sega Mega Drive</MenuItem>
         </Select>
       </FormControl>
-    );
+    )
 
     return (
       <Paper>
@@ -274,14 +274,14 @@ class Games extends Component {
 
         <Input
           value={this.search_text}
-          placeholder={"search by title"}
+          placeholder={'search by title'}
           onChange={this.handleChangeSearch}
         />
 
         {table}
       </Paper>
-    );
+    )
   }
 }
 
-export default Games;
+export default Games

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import axios from "../axios-retrobits";
+import React, { useState, useEffect } from 'react'
+import axios from '../axios-retrobits'
 import {
   Paper,
   Table,
@@ -8,48 +8,48 @@ import {
   TableHead,
   TableRow,
   TableFooter,
-  TablePagination
-} from "@material-ui/core";
-import TablePaginationActions from "../components/TablePaginationAcitons";
+  TablePagination,
+} from '@material-ui/core'
+import TablePaginationActions from '../components/TablePaginationAcitons'
 
 const extractPageFromUrl = url => {
   if (url) {
-    return new URL(url).searchParams.get("page");
+    return new URL(url).searchParams.get('page')
   }
 
-  return url;
-};
+  return url
+}
 
 const Users = () => {
-  const [rows, setRows] = useState([]);
-  const [pagination, setPagination] = useState({});
-  const [page, setPage] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [rows, setRows] = useState([])
+  const [pagination, setPagination] = useState({})
+  const [page, setPage] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
 
   function combineFetchParams() {
-    let params = {};
+    let params = {}
 
     if (page) {
       params = {
         ...params,
-        page: page
-      };
+        page: page,
+      }
     }
 
-    return params;
+    return params
   }
 
   useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true);
-      setIsError(false);
+      setIsLoading(true)
+      setIsError(false)
       try {
-        const response = await axios("users", {
-          params: combineFetchParams()
-        });
-        setRows(response.data.data);
-        setPage(response.data.meta.current_page);
+        const response = await axios('users', {
+          params: combineFetchParams(),
+        })
+        setRows(response.data.data)
+        // setPage(+response.data.meta.current_page)
         setPagination({
           count: response.data.meta.total,
           page: response.data.meta.current_page,
@@ -58,22 +58,22 @@ const Users = () => {
           first: extractPageFromUrl(response.data.links.first),
           last: extractPageFromUrl(response.data.links.last),
           next: extractPageFromUrl(response.data.links.next),
-          prev: extractPageFromUrl(response.data.links.prev)
-        });
-        setPage(response.data.meta.current_page);
+          prev: extractPageFromUrl(response.data.links.prev),
+        })
+        setPage(response.data.meta.current_page)
       } catch (error) {
-        setIsError(true);
+        setIsError(true)
       }
 
-      setIsLoading(false);
-    };
-    fetchData();
-  }, [page]);
+      setIsLoading(false)
+    }
+    fetchData()
+  }, [page])
 
   const handleOnChangePage = (event, page) => {
-    setPage(page);
-    setIsLoading(true);
-  };
+    setPage(+page)
+    setIsLoading(true)
+  }
 
   const paginationActions = () => {
     return (
@@ -85,8 +85,8 @@ const Users = () => {
         nextPage={pagination.next}
         prevPage={pagination.prev}
       />
-    );
-  };
+    )
+  }
 
   let table = (
     <Table>
@@ -115,13 +115,13 @@ const Users = () => {
             page={pagination.page - 1}
             rowsPerPage={pagination.rowsPerPage}
             //   onChangeRowsPerPage={this.handleChangeRowsPerPage}
-              onChangePage={handleOnChangePage}
+            onChangePage={handleOnChangePage}
             ActionsComponent={paginationActions}
           />
         </TableRow>
       </TableFooter>
     </Table>
-  );
+  )
 
   return (
     <Paper>
@@ -129,7 +129,7 @@ const Users = () => {
       {isError && <div>Something wrong...</div>}
       {!isLoading && table}
     </Paper>
-  );
-};
+  )
+}
 
-export default Users;
+export default Users
