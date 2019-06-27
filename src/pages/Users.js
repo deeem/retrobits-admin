@@ -11,14 +11,7 @@ import {
   TablePagination,
 } from '@material-ui/core'
 import TablePaginationActions from '../components/TablePaginationAcitons'
-
-const extractPageFromUrl = url => {
-  if (url) {
-    return new URL(url).searchParams.get('page')
-  }
-
-  return url
-}
+import {extractPageParamFromUrl} from '../components/helpers'
 
 const Users = () => {
   const [rows, setRows] = useState([])
@@ -55,10 +48,10 @@ const Users = () => {
           page: response.data.meta.current_page,
           rowsPerPage: response.data.meta.per_page,
           last_page: response.data.meta.last_page,
-          first: extractPageFromUrl(response.data.links.first),
-          last: extractPageFromUrl(response.data.links.last),
-          next: extractPageFromUrl(response.data.links.next),
-          prev: extractPageFromUrl(response.data.links.prev),
+          first: extractPageParamFromUrl(response.data.links.first),
+          last: extractPageParamFromUrl(response.data.links.last),
+          next: extractPageParamFromUrl(response.data.links.next),
+          prev: extractPageParamFromUrl(response.data.links.prev),
         })
         setPage(response.data.meta.current_page)
       } catch (error) {
