@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import axios from '../axios-retrobits'
 import { Button, Grid, TextField, MenuItem } from '@material-ui/core'
+import ImagesUpload from '../components/GameForm/ImagesUpload'
+import Images from '../components/GameForm/Images'
 
 class GameForm extends Component {
   state = {
@@ -42,7 +44,9 @@ class GameForm extends Component {
     switch (name) {
       case 'rom':
         form = { ...this.state.form, rom: event.target.files[0] }
-        console.log(event.target.files[0].name)
+        break
+      case 'images':
+        form = { ...this.state.form, images: event.target.files }
         break
       default:
         form = { ...this.state.form, [name]: event.target.value }
@@ -51,13 +55,29 @@ class GameForm extends Component {
     this.setState({ form })
   }
 
-  handleSave = event => {
+  handleDeleteImage = id => {
+    console.log(id)
+    // send request to delete
+    // then remove from local state
+  }
+
+  handleSave = () => {
     let data = new FormData()
     data.append('_method', 'PATCH')
     data.append('title', this.state.form.title)
     data.append('description', this.state.form.description)
     data.append('platform', this.state.form.platform)
-    data.append('rom', this.state.form.rom)
+    if (this.state.form.rom) {
+      data.append('rom', this.state.form.rom)
+    }
+
+    if (this.state.form.images) {
+      const images = Array.from(this.state.form.images)
+      images.forEach((file, i) => {
+        data.append('images[]', file)
+      })
+    }
+
     axios
       .post(`games/${this.state.game.id}`, data)
       .then(response => {
@@ -117,16 +137,25 @@ class GameForm extends Component {
           <Grid item>
             {this.state.form.rom ? this.state.form.rom.name : null}
             <input
-              // accept="image/*"
-              id="save-file"
-              // multiple
+              id="rom"
               type="file"
               style={{ display: 'none' }}
               onChange={this.handleChange('rom')}
             />
-            <label htmlFor="save-file">
-              <Button component="span">Save File</Button>
+            <label htmlFor="rom">
+              <Button component="span">Game ROM File</Button>
             </label>
+          </Grid>
+          <Grid item>
+            {this.state.game.images ? (
+              <Images
+                items={this.state.game.images}
+                onDelete={this.handleDeleteImage}
+              />
+            ) : null}
+          </Grid>
+          <Grid item>
+            <ImagesUpload onChange={this.handleChange('images')} />
           </Grid>
         </Grid>
 
