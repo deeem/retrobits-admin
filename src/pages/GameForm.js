@@ -11,6 +11,8 @@ class GameForm extends Component {
       title: '',
       description: '',
       platform: '',
+      rom: null,
+      images: [],
     },
   }
 
@@ -36,14 +38,34 @@ class GameForm extends Component {
   }
 
   handleChange = name => event => {
-    this.setState({
-      ...this.state,
-      form: { ...this.state.form, [name]: event.target.value },
-    })
+    let form = {}
+    switch (name) {
+      case 'rom':
+        form = { ...this.state.form, rom: event.target.files[0] }
+        console.log(event.target.files[0].name)
+        break
+      default:
+        form = { ...this.state.form, [name]: event.target.value }
+    }
+
+    this.setState({ form })
   }
 
-  handleSave = (event) => {
-      console.log('save')
+  handleSave = event => {
+    let data = new FormData()
+    data.append('_method', 'PATCH')
+    data.append('title', this.state.form.title)
+    data.append('description', this.state.form.description)
+    data.append('platform', this.state.form.platform)
+    data.append('rom', this.state.form.rom)
+    axios
+      .post(`games/${this.state.game.id}`, data)
+      .then(response => {
+        // console.log(response)
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
 
   render() {
@@ -91,6 +113,20 @@ class GameForm extends Component {
                 Sega Genesis
               </MenuItem>
             </TextField>
+          </Grid>
+          <Grid item>
+            {this.state.form.rom ? this.state.form.rom.name : null}
+            <input
+              // accept="image/*"
+              id="save-file"
+              // multiple
+              type="file"
+              style={{ display: 'none' }}
+              onChange={this.handleChange('rom')}
+            />
+            <label htmlFor="save-file">
+              <Button component="span">Save File</Button>
+            </label>
           </Grid>
         </Grid>
 
