@@ -9,6 +9,7 @@ class GameForm extends Component {
     game: {},
     loading: false,
     error: false,
+    mode: '',
     form: {
       title: '',
       description: '',
@@ -19,24 +20,29 @@ class GameForm extends Component {
   }
 
   componentDidMount() {
-    const id = this.props.match.params.id
-    axios
-      .get(`games/${id}`)
-      .then(response => {
-        const data = response.data.data
-        console.log(data)
-        this.setState({
-          game: data,
-          form: {
-            title: data.title,
-            description: data.description,
-            platform: data.platform.slug,
-          },
+    if (this.props.match.params.id !== 'create') {
+      const id = this.props.match.params.id
+      axios
+        .get(`games/${id}`)
+        .then(response => {
+          const data = response.data.data
+          console.log(data)
+          this.setState({
+            mode: 'edit',
+            game: data,
+            form: {
+              title: data.title,
+              description: data.description,
+              platform: data.platform.slug,
+            },
+          })
         })
-      })
-      .catch(error => {
-        console.log(error)
-      })
+        .catch(error => {
+          console.log(error)
+        })
+    } else {
+      this.setState({ mode: 'create' })
+    }
   }
 
   handleChange = name => event => {
@@ -61,9 +67,8 @@ class GameForm extends Component {
     // then remove from local state
   }
 
-  handleSave = () => {
-    let data = new FormData()
-    data.append('_method', 'PATCH')
+  handleSubmit = () => {
+    const data = new FormData()
     data.append('title', this.state.form.title)
     data.append('description', this.state.form.description)
     data.append('platform', this.state.form.platform)
@@ -78,8 +83,14 @@ class GameForm extends Component {
       })
     }
 
+    if ((this.mode = 'edit')) {
+      data.append('_method', 'PATCH')
+    }
+
+    const url = this.mode == 'edit' ? `games/${this.state.game.id}` : 'games'
+
     axios
-      .post(`games/${this.state.game.id}`, data)
+      .post(url, data)
       .then(response => {
         // console.log(response)
       })
@@ -89,14 +100,16 @@ class GameForm extends Component {
   }
 
   render() {
-    const { handleChange } = this
+    const { handleChange, handleSubmit, handleDeleteImage } = this,
+      { form, game } = this.state
+
     return (
       <form autoComplete="off">
         <Grid container spacing={2}>
           <Grid item>
             <TextField
               label="Title"
-              value={this.state.form.title}
+              value={form.title}
               onChange={handleChange('title')}
               margin="normal"
             />
@@ -106,7 +119,7 @@ class GameForm extends Component {
               multiline
               rowsMax="4"
               label="Description"
-              value={this.state.form.description}
+              value={form.description}
               onChange={handleChange('description')}
               margin="normal"
             />
@@ -115,7 +128,7 @@ class GameForm extends Component {
             <TextField
               select
               label="select"
-              value={this.state.form.platform}
+              value={form.platform}
               helperText="Please select game platform"
               margin="normal"
               onChange={handleChange('platform')}
@@ -135,31 +148,28 @@ class GameForm extends Component {
             </TextField>
           </Grid>
           <Grid item>
-            {this.state.form.rom ? this.state.form.rom.name : null}
+            {form.rom ? form.rom.name : null}
             <input
               id="rom"
               type="file"
               style={{ display: 'none' }}
-              onChange={this.handleChange('rom')}
+              onChange={handleChange('rom')}
             />
             <label htmlFor="rom">
               <Button component="span">Game ROM File</Button>
             </label>
           </Grid>
           <Grid item>
-            {this.state.game.images ? (
-              <Images
-                items={this.state.game.images}
-                onDelete={this.handleDeleteImage}
-              />
+            {game.images ? (
+              <Images items={game.images} onDelete={handleDeleteImage} />
             ) : null}
           </Grid>
           <Grid item>
-            <ImagesUpload onChange={this.handleChange('images')} />
+            <ImagesUpload onChange={handleChange('images')} />
           </Grid>
         </Grid>
 
-        <Button variant="contained" color="primary" onClick={this.handleSave}>
+        <Button variant="contained" color="primary" onClick={handleSubmit}>
           Save
         </Button>
       </form>
