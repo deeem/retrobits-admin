@@ -35,6 +35,7 @@ class ImagesUpload extends Component {
           type="file"
           multiple
           onChange={this.handleChange}
+          style={{ display: 'none' }}
         />
         <label htmlFor="images">
           <Button component="span">Images</Button>

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import axios from '../axios-retrobits'
-import { Button, Grid, TextField, MenuItem } from '@material-ui/core'
+import { Button, Grid, TextField, MenuItem, Container } from '@material-ui/core'
 import ImagesUpload from '../components/GameForm/ImagesUpload'
 import Images from '../components/GameForm/Images'
-import { validateInput, validateForm, hasError } from '../components/helpers'
+import { validateInput, validateForm, hasError } from '../helpers/validation'
 
 class GameForm extends Component {
   state = {
@@ -145,78 +145,85 @@ class GameForm extends Component {
       { form, game } = this.state
 
     return (
-      <form autoComplete="off">
-        <Grid container spacing={2}>
-          <Grid item>
-            <TextField
-              label="Title"
-              value={form.title}
-              onChange={handleChange('title')}
-              margin="normal"
-              error={hasError(this.state.validation.title)}
-            />
+      <Container maxWidth="sm">
+        <form autoComplete="off">
+          <Grid container spacing={2}>
+            <Grid item>
+              <TextField
+                label="Title"
+                value={form.title}
+                onChange={handleChange('title')}
+                margin="normal"
+                error={hasError(this.state.validation.title)}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                multiline
+                rowsMax="4"
+                label="Description"
+                value={form.description}
+                onChange={handleChange('description')}
+                margin="normal"
+                error={hasError(this.state.validation.description)}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                select
+                label="select"
+                value={form.platform}
+                helperText="Please select game platform"
+                margin="normal"
+                onChange={handleChange('platform')}
+                error={hasError(this.state.validation.platform)}
+              >
+                <MenuItem key="zx" value="zx">
+                  ZX-Spectrum
+                </MenuItem>
+                <MenuItem key="nes" value="nes">
+                  Nintendo
+                </MenuItem>
+                <MenuItem key="snes" value="snes">
+                  Super Nintendo
+                </MenuItem>
+                <MenuItem key="smd" value="smd">
+                  Sega Genesis
+                </MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item>
+              {form.rom ? form.rom.name : null}
+              <input
+                id="rom"
+                type="file"
+                style={{ display: 'none' }}
+                onChange={handleChange('rom')}
+              />
+              <label htmlFor="rom">
+                <Button component="span">Game ROM File</Button>
+              </label>
+            </Grid>
+            <Grid item>
+              {game.images ? (
+                <Images items={game.images} onDelete={handleDeleteImage} />
+              ) : null}
+            </Grid>
+            <Grid item>
+              <ImagesUpload onChange={handleChange('images')} />
+            </Grid>
           </Grid>
-          <Grid item>
-            <TextField
-              multiline
-              rowsMax="4"
-              label="Description"
-              value={form.description}
-              onChange={handleChange('description')}
-              margin="normal"
-              error={hasError(this.state.validation.description)}
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              select
-              label="select"
-              value={form.platform}
-              helperText="Please select game platform"
-              margin="normal"
-              onChange={handleChange('platform')}
-              error={hasError(this.state.validation.platform)}
-            >
-              <MenuItem key="zx" value="zx">
-                ZX-Spectrum
-              </MenuItem>
-              <MenuItem key="nes" value="nes">
-                Nintendo
-              </MenuItem>
-              <MenuItem key="snes" value="snes">
-                Super Nintendo
-              </MenuItem>
-              <MenuItem key="smd" value="smd">
-                Sega Genesis
-              </MenuItem>
-            </TextField>
-          </Grid>
-          <Grid item>
-            {form.rom ? form.rom.name : null}
-            <input
-              id="rom"
-              type="file"
-              style={{ display: 'none' }}
-              onChange={handleChange('rom')}
-            />
-            <label htmlFor="rom">
-              <Button component="span">Game ROM File</Button>
-            </label>
-          </Grid>
-          <Grid item>
-            {game.images ? (
-              <Images items={game.images} onDelete={handleDeleteImage} />
-            ) : null}
-          </Grid>
-          <Grid item>
-            <ImagesUpload onChange={handleChange('images')} />
-          </Grid>
-        </Grid>
 
-        <Button variant="contained" disabled={!this.state.formIsValid} color="primary" onClick={handleSubmit}>
-          Save
-        </Button>
-      </form>
+          <Button
+            variant="contained"
+            disabled={!this.state.formIsValid}
+            color="primary"
+            onClick={handleSubmit}
+          >
+            Save
+          </Button>
+        </form>
+      </Container>
     )
   }
 }
