@@ -3,6 +3,7 @@ import axios from '../axios-retrobits'
 import { Button, Grid, TextField, MenuItem } from '@material-ui/core'
 import ImagesUpload from '../components/GameForm/ImagesUpload'
 import Images from '../components/GameForm/Images'
+import { validateInput, validateForm, hasError } from '../components/helpers'
 
 class GameForm extends Component {
   state = {
@@ -17,6 +18,30 @@ class GameForm extends Component {
       rom: null,
       images: [],
     },
+    validation: {
+      title: {
+        rules: {
+          required: true,
+        },
+        valid: false,
+        touched: false,
+      },
+      description: {
+        rules: {
+          required: true,
+        },
+        valid: false,
+        touched: false,
+      },
+      platform: {
+        rules: {
+          required: true,
+        },
+        valid: false,
+        touched: false,
+      },
+    },
+    formIsValid: false,
   }
 
   componentDidMount() {
@@ -46,19 +71,35 @@ class GameForm extends Component {
   }
 
   handleChange = name => event => {
-    let form = {}
+    let value
     switch (name) {
       case 'rom':
-        form = { ...this.state.form, rom: event.target.files[0] }
+        value = event.target.files[0]
         break
       case 'images':
-        form = { ...this.state.form, images: event.target.files }
+        value = event.target.files
         break
       default:
-        form = { ...this.state.form, [name]: event.target.value }
+        value = event.target.value
     }
 
-    this.setState({ form })
+    const updatedState = {
+      ...this.state,
+      form: { ...this.state.form, [name]: value },
+      validation: {
+        ...this.state.validation,
+        [name]: {
+          rules: this.state.validation[name].rules,
+          valid: validateInput(value, this.state.validation[name].rules),
+          touched: true,
+        },
+      },
+    }
+
+    this.setState({
+      ...updatedState,
+      formIsValid: validateForm(updatedState.validation),
+    })
   }
 
   handleDeleteImage = id => {
@@ -112,6 +153,7 @@ class GameForm extends Component {
               value={form.title}
               onChange={handleChange('title')}
               margin="normal"
+              error={hasError(this.state.validation.title)}
             />
           </Grid>
           <Grid item>
@@ -122,6 +164,7 @@ class GameForm extends Component {
               value={form.description}
               onChange={handleChange('description')}
               margin="normal"
+              error={hasError(this.state.validation.description)}
             />
           </Grid>
           <Grid item>
@@ -132,6 +175,7 @@ class GameForm extends Component {
               helperText="Please select game platform"
               margin="normal"
               onChange={handleChange('platform')}
+              error={hasError(this.state.validation.platform)}
             >
               <MenuItem key="zx" value="zx">
                 ZX-Spectrum
@@ -169,7 +213,7 @@ class GameForm extends Component {
           </Grid>
         </Grid>
 
-        <Button variant="contained" color="primary" onClick={handleSubmit}>
+        <Button variant="contained" disabled={!this.state.formIsValid} color="primary" onClick={handleSubmit}>
           Save
         </Button>
       </form>
