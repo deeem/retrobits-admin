@@ -38,7 +38,9 @@ class ImagesUpload extends Component {
           style={{ display: 'none' }}
         />
         <label htmlFor="images">
-          <Button component="span">Images</Button>
+          <Button variant="contained" component="span">
+            Add Images
+          </Button>
         </label>
       </>
     )

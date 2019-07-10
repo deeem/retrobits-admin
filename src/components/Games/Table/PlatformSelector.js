@@ -1,10 +1,20 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { FormControl, InputLabel, Select, MenuItem } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+
+const useStyles = makeStyles(theme => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+}))
 
 const PlatformSelector = ({ value, onChange }) => {
+  const classes = useStyles()
+
   return (
-    <FormControl>
+    <FormControl className={classes.formControl}>
       <InputLabel htmlFor="platform">Platform</InputLabel>
       <Select
         value={value}

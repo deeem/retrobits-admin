@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import axios from '../../../axios-retrobits'
+import { withStyles } from '@material-ui/core/styles'
 import {
   Paper,
   Table,
@@ -19,7 +20,15 @@ import { extractPageParamFromUrl } from '../../helpers'
 import PlatformSelector from './PlatformSelector'
 import SearchField from './SearchField'
 
-export default class extends Component {
+const styles = theme => ({
+  actionBar: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+})
+
+class GamesTable extends Component {
   state = {
     games: [],
     loading: true,
@@ -191,8 +200,6 @@ export default class extends Component {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell> </TableCell>
-            <TableCell>ID</TableCell>
             <TableCell align="right">Platform</TableCell>
             <TableCell>
               <TableSortLabel
@@ -203,24 +210,22 @@ export default class extends Component {
                 Title
               </TableSortLabel>
             </TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
           {this.state.games.map(row => (
             <TableRow key={row.id}>
-              <TableCell>
+              <TableCell align="right">{row.platform.title}</TableCell>
+              <TableCell>{row.title}</TableCell>
+              <TableCell style={{ width: '130px' }}>
                 <IconButton onClick={() => this.props.onDelete(row.id)}>
                   <DeleteIcon color="secondary" />
                 </IconButton>
                 <IconButton onClick={() => this.props.onEdit(row.id)}>
-                  <EditIcon color='primary' />
+                  <EditIcon color="primary" />
                 </IconButton>
               </TableCell>
-              <TableCell component="th" scope="row">
-                {row.id}
-              </TableCell>
-              <TableCell align="right">{row.platform.title}</TableCell>
-              <TableCell>{row.title}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -245,7 +250,7 @@ export default class extends Component {
 
     return (
       <Paper>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div className={this.props.classes.actionBar}>
           <PlatformSelector
             value={this.state.platform}
             onChange={this.handlePlatformChange}
@@ -262,3 +267,5 @@ export default class extends Component {
     )
   }
 }
+
+export default withStyles(styles)(GamesTable)
