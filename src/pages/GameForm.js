@@ -84,6 +84,23 @@ class GameForm extends Component {
               description: data.description,
               platform: data.platform.slug,
             },
+            validation: {
+              title: {
+                rules: {...this.state.validation.title.rules},
+                valid: true,
+                touched: false,
+              },
+              description: {
+                rules: {...this.state.validation.description.rules},
+                valid: true,
+                touched: false,
+              },
+              platform: {
+                rules: {...this.state.validation.platform.rules},
+                valid: true,
+                touched: false,
+              },
+            }
           })
         })
         .catch(error => {
