@@ -1,21 +1,60 @@
 import React, { Component } from 'react'
 import Table from '../components/Games/Table/Table'
-import { withRouter } from "react-router-dom";
+import { withRouter } from 'react-router-dom'
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+} from '@material-ui/core'
 
 class Games extends Component {
-
-  handleEdit = (id) => {
-    this.props.history.push(`/games/${id}`);
+  state = {
+    isOpenDeleteDialog: false,
+    itemToDelete: null,
   }
 
-  handleDelete = (id) => {
-    console.log(id);
+  handleEdit = id => {
+    this.props.history.push(`/games/${id}`)
+  }
+
+  handleDelete = id => {
+    this.setState({ itemToDelete: id, isOpenDeleteDialog: true })
+  }
+
+  handleDeleteAbort = () => {
+    this.setState({ itemToDelete: null, isOpenDeleteDialog: false })
+  }
+
+  handleDeleteConfirm = id => {
+    console.log(`deletion confirmed form item ${id}`)
   }
 
   render() {
-    return <Table onEdit={this.handleEdit} onDelete={this.handleDelete} />
+    const { isOpenDeleteDialog: open, itemToDelete: id } = this.state
+    const { handleDeleteAbort, handleDeleteConfirm } = this
+
+    const dialog = (
+      <Dialog open={open} onClose={handleDeleteAbort}>
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleDeleteAbort} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={() => handleDeleteConfirm(id)} color="secondary" autoFocus>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+
+    return (
+      <>
+        {dialog}
+        <Table onEdit={this.handleEdit} onDelete={this.handleDelete} />
+      </>
+    )
   }
 }
-
 
 export default withRouter(Games)
