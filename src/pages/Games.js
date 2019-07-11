@@ -14,6 +14,10 @@ class Games extends Component {
     itemToDelete: null,
   }
 
+  handleCreate = () => {
+    this.props.history.push('/games/create')
+  }
+
   handleEdit = id => {
     this.props.history.push(`/games/${id}`)
   }
@@ -32,7 +36,7 @@ class Games extends Component {
 
   render() {
     const { isOpenDeleteDialog: open, itemToDelete: id } = this.state
-    const { handleDeleteAbort, handleDeleteConfirm } = this
+    const { handleCreate, handleEdit, handleDelete, handleDeleteAbort, handleDeleteConfirm } = this
 
     const dialog = (
       <Dialog open={open} onClose={handleDeleteAbort}>
@@ -51,7 +55,7 @@ class Games extends Component {
     return (
       <>
         {dialog}
-        <Table onEdit={this.handleEdit} onDelete={this.handleDelete} />
+        <Table onCreate={handleCreate} onEdit={handleEdit} onDelete={handleDelete} />
       </>
     )
   }

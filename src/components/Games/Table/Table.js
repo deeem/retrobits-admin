@@ -13,8 +13,11 @@ import {
   TableSortLabel,
   IconButton,
 } from '@material-ui/core'
-import EditIcon from '@material-ui/icons/Edit'
-import DeleteIcon from '@material-ui/icons/Delete'
+import {
+  Add as AddIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+} from '@material-ui/icons'
 import TablePaginationActions from './TablePaginationActions'
 import { extractPageParamFromUrl } from '../../helpers'
 import PlatformSelector from './PlatformSelector'
@@ -260,6 +263,10 @@ class GamesTable extends Component {
             value={this.state.search_text}
             onChange={this.handleChangeSearch}
           />
+
+          <IconButton onClick={this.props.onCreate}>
+            <AddIcon />
+          </IconButton>
         </div>
 
         {table}
