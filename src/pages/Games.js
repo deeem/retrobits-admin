@@ -1,14 +1,11 @@
 import React, { Component } from 'react'
 import Table from '../components/Games/Table/Table'
+import { withRouter } from "react-router-dom";
 
 class Games extends Component {
-  state = {
-    editMode: false,
-    game: {},
-  }
 
   handleEdit = (id) => {
-    console.log(id);
+    this.props.history.push(`/games/${id}`);
   }
 
   handleDelete = (id) => {
@@ -20,4 +17,5 @@ class Games extends Component {
   }
 }
 
-export default Games
+
+export default withRouter(Games)
