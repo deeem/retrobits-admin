@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from '../axios-retrobits'
-import { Button, Grid, TextField, MenuItem, Container } from '@material-ui/core'
+import { Button, TextField, MenuItem, Container } from '@material-ui/core'
 import ImagesUpload from '../components/GameForm/ImagesUpload'
 import Images from '../components/GameForm/Images'
 import { validateInput, validateForm, hasError } from '../helpers/validation'
@@ -76,7 +76,6 @@ class GameForm extends Component {
         .get(`games/${id}`)
         .then(response => {
           const data = response.data.data
-          console.log(data)
           this.setState({
             mode: 'edit',
             game: data,
@@ -113,12 +112,15 @@ class GameForm extends Component {
       form: { ...this.state.form, [name]: value },
       validation: {
         ...this.state.validation,
-        [name]: {
-          rules: this.state.validation[name].rules,
-          valid: validateInput(value, this.state.validation[name].rules),
-          touched: true,
-        },
       },
+    }
+
+    if (updatedState.validation[name]) {
+      updatedState.validation[name] = {
+        rules: this.state.validation[name].rules,
+        valid: validateInput(value, this.state.validation[name].rules),
+        touched: true,
+      }
     }
 
     this.setState({
