@@ -1,9 +1,20 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { Paper } from '@material-ui/core'
+import { withStyles } from '@material-ui/core/styles'
 import axios from '../../axios-retrobits'
 import GamesTable from './Table'
 import PlatformSelector from './PlatformSelector'
+import SearchField from './SearchField'
 import { extractPageParamFromUrl } from '../helpers'
+
+const styles = theme => ({
+  actionBar: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+})
 
 class GamesList extends Component {
   state = {
@@ -11,6 +22,7 @@ class GamesList extends Component {
       page: false,
       per_page: false,
       platform: false,
+      search_text: '',
     },
     games: [],
     pagination: {},
@@ -37,6 +49,13 @@ class GamesList extends Component {
       params = {
         ...params,
         'filter[platform]': stateParams.platform,
+      }
+    }
+
+    if (stateParams.search_text) {
+      params = {
+        ...params,
+        'filter[title]': stateParams.search_text,
       }
     }
 
@@ -77,7 +96,9 @@ class GamesList extends Component {
       (prevState.params.per_page !== undefined &&
         prevState.params.per_page !== this.state.params.per_page) ||
       (prevState.params.platform !== undefined &&
-        prevState.params.platform !== this.state.params.platform)
+        prevState.params.platform !== this.state.params.platform) ||
+      (prevState.params.search_text !== undefined &&
+        prevState.params.search_text !== this.state.params.search_text)
 
     if (shouldFetch) {
       this.fetchGames()
@@ -113,22 +134,37 @@ class GamesList extends Component {
         page: 1,
         platform: event.target.value,
       },
-
-      loading: true,
+      //   loading: true,
     })
   }
+
+  handleChangeSearch = event =>
+    this.setState({
+      params: {
+        ...this.state.params,
+        page: 1,
+        search_text: event.target.value,
+      },
+    })
 
   render() {
     const { games, pagination } = this.state
     const { platforms } = this.props
 
     return (
-      <>
-        <PlatformSelector
-          options={platforms}
-          value={this.state.params.platform}
-          onChange={this.handleChangePlatform}
-        />
+      <Paper>
+        <div className={this.props.classes.actionBar}>
+          <PlatformSelector
+            options={platforms}
+            value={this.state.params.platform}
+            onChange={this.handleChangePlatform}
+          />
+
+          <SearchField
+            value={this.state.search_text}
+            onChange={this.handleChangeSearch}
+          />
+        </div>
 
         {games.length && (
           <GamesTable
@@ -138,7 +174,7 @@ class GamesList extends Component {
             onChangeRowsPerPage={this.handleChangeRowsPerPage}
           />
         )}
-      </>
+      </Paper>
     )
   }
 }
@@ -147,4 +183,4 @@ GamesList.propTypes = {
   platforms: PropTypes.array.isRequired,
 }
 
-export default GamesList
+export default withStyles(styles)(GamesList)
