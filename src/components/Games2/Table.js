@@ -8,6 +8,7 @@ import {
   TableRow,
   TableFooter,
   TablePagination,
+  TableSortLabel,
   IconButton,
 } from '@material-ui/core'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
@@ -19,13 +20,23 @@ const GamesTable = ({
   pagination,
   onChangePage,
   onChangeRowsPerPage,
+  titleSortOrder,
+  onSortTitle,
 }) => {
   let table = (
     <Table>
       <TableHead>
         <TableRow>
           <TableCell align="right">Platform</TableCell>
-          <TableCell />
+          <TableCell>
+            <TableSortLabel
+              active={true}
+              direction={titleSortOrder}
+              onClick={onSortTitle}
+            >
+              Title
+            </TableSortLabel>
+          </TableCell>
           <TableCell />
         </TableRow>
       </TableHead>
@@ -53,7 +64,9 @@ const GamesTable = ({
             rowsPerPage={pagination.rowsPerPage}
             onChangeRowsPerPage={onChangeRowsPerPage}
             onChangePage={onChangePage}
-            ActionsComponent={() => paginationActionsWrapper(pagination, onChangePage)}
+            ActionsComponent={() =>
+              paginationActionsWrapper(pagination, onChangePage)
+            }
           />
         </TableRow>
       </TableFooter>

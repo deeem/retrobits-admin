@@ -21,6 +21,7 @@ class GamesList extends Component {
     params: {
       page: false,
       per_page: false,
+      titleOrder: 'desc',
       platform: false,
       search_text: '',
     },
@@ -42,6 +43,20 @@ class GamesList extends Component {
       params = {
         ...params,
         page_size: stateParams.per_page,
+      }
+    }
+
+    if (stateParams.titleOrder === 'asc') {
+      params = {
+        ...params,
+        sort: 'title',
+      }
+    }
+
+    if (stateParams.titleOrder === 'desc') {
+      params = {
+        ...params,
+        sort: '-title',
       }
     }
 
@@ -95,6 +110,8 @@ class GamesList extends Component {
         prevState.params.page !== this.state.params.page) ||
       (prevState.params.per_page !== undefined &&
         prevState.params.per_page !== this.state.params.per_page) ||
+      (prevState.params.titleOrder !== undefined &&
+        prevState.params.titleOrder !== this.state.params.titleOrder) ||
       (prevState.params.platform !== undefined &&
         prevState.params.platform !== this.state.params.platform) ||
       (prevState.params.search_text !== undefined &&
@@ -105,7 +122,7 @@ class GamesList extends Component {
     }
   }
 
-  handleOnChangePage = page => {
+  handleOnChangePage = page =>
     this.setState({
       params: {
         ...this.state.params,
@@ -113,9 +130,8 @@ class GamesList extends Component {
       },
       // loading: true,
     })
-  }
 
-  handleChangeRowsPerPage = event => {
+  handleChangeRowsPerPage = event =>
     this.setState({
       params: {
         ...this.state.params,
@@ -124,10 +140,18 @@ class GamesList extends Component {
       },
       //   loading: true,
     })
-  }
 
-  handleChangePlatform = event => {
-    console.log('platform change fired')
+  handleSortTitle = () =>
+    this.setState({
+      params: {
+        ...this.state.params,
+        page: 1,
+        titleOrder: this.state.params.titleOrder === 'asc' ? 'desc' : 'asc',
+      },
+      //   loading: true,
+    })
+
+  handleChangePlatform = event =>
     this.setState({
       params: {
         ...this.state.params,
@@ -136,7 +160,6 @@ class GamesList extends Component {
       },
       //   loading: true,
     })
-  }
 
   handleChangeSearch = event =>
     this.setState({
@@ -172,6 +195,8 @@ class GamesList extends Component {
             pagination={pagination}
             onChangePage={this.handleOnChangePage}
             onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            titleSortOrder={this.state.params.titleOrder}
+            onSortTitle={this.handleSortTitle}
           />
         )}
       </Paper>
