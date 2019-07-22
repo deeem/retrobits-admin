@@ -6,39 +6,46 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight'
 import LastPageIcon from '@material-ui/icons/LastPage'
 import PropTypes from 'prop-types'
 
-function TablePaginationActions({
-  page,
-  lastPage,
-  clickedFirst,
-  clickedPrev,
-  clickedNext,
-  clickedLast,
-}) {
+const paginationActionsWrapper = (pagination, onChangePage) => {
+  return (
+    <TablePaginationActions
+      pagination={pagination}
+      onPageChange={onChangePage}
+    />
+  )
+}
+
+const TablePaginationActions = ({
+  pagination: { first, next, last, last_page, page },
+  onPageChange,
+}) => {
   return (
     <>
-      <IconButton onClick={clickedFirst} disabled={page === 1}>
+      <IconButton onClick={() => onPageChange(first)} disabled={page === 1}>
         <FirstPageIcon />
       </IconButton>
-      <IconButton onClick={clickedPrev} disabled={page === 1}>
+      <IconButton onClick={() => onPageChange(last)} disabled={page === 1}>
         <KeyboardArrowLeft />
       </IconButton>
-      <IconButton onClick={clickedNext} disabled={page === lastPage}>
+      <IconButton
+        onClick={() => onPageChange(next)}
+        disabled={page === last_page}
+      >
         <KeyboardArrowRight />
       </IconButton>
-      <IconButton onClick={clickedLast} disabled={page === lastPage}>
+      <IconButton
+        onClick={() => onPageChange(last)}
+        disabled={page === last_page}
+      >
         <LastPageIcon />
       </IconButton>
     </>
   )
 }
 
-export default TablePaginationActions
+export default paginationActionsWrapper
 
 TablePaginationActions.propTypes = {
-  page: PropTypes.number.isRequired,
-  lastPage: PropTypes.number.isRequired,
-  clickedFirst: PropTypes.func.isRequired,
-  clickedPrev: PropTypes.func.isRequired,
-  clickedNext: PropTypes.func.isRequired,
-  clickedLast: PropTypes.func.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+  pagination: PropTypes.object.isRequired,
 }

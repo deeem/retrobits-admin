@@ -12,8 +12,12 @@ import { extractPageParamFromUrl } from '../components/helpers'
 
 class Games2 extends Component {
   state = {
-    params: {},
+    params: {
+        page: false,
+        per_page: false,
+    },
     games: [],
+    pagination: {},
   }
 
   fetchGames = () => {
@@ -43,6 +47,14 @@ class Games2 extends Component {
     this.fetchGames()
   }
 
+   handleOnChangePage = (value) => {
+    console.log('fired change page ' + value)
+  }
+
+   handleChangeRowsPerPage = () => {
+    console.log('fired change per page')
+  }
+
   render() {
     return (
       <>
@@ -50,6 +62,8 @@ class Games2 extends Component {
           <GamesTable
             games={this.state.games}
             pagination={this.state.pagination}
+            onChangePage={this.handleOnChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}
           />
         )}
       </>
