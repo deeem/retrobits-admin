@@ -33,6 +33,13 @@ class GamesList extends Component {
       }
     }
 
+    if (stateParams.platform) {
+      params = {
+        ...params,
+        'filter[platform]': stateParams.platform,
+      }
+    }
+
     return params
   }
 
@@ -68,7 +75,9 @@ class GamesList extends Component {
       (prevState.params.page !== undefined &&
         prevState.params.page !== this.state.params.page) ||
       (prevState.params.per_page !== undefined &&
-        prevState.params.per_page !== this.state.params.per_page)
+        prevState.params.per_page !== this.state.params.per_page) ||
+      (prevState.params.platform !== undefined &&
+        prevState.params.platform !== this.state.params.platform)
 
     if (shouldFetch) {
       this.fetchGames()
@@ -97,7 +106,16 @@ class GamesList extends Component {
   }
 
   handleChangePlatform = event => {
-      console.log('platform change fired')
+    console.log('platform change fired')
+    this.setState({
+      params: {
+        ...this.state.params,
+        page: 1,
+        platform: event.target.value,
+      },
+
+      loading: true,
+    })
   }
 
   render() {
@@ -106,7 +124,12 @@ class GamesList extends Component {
 
     return (
       <>
-        <PlatformSelector options={[]} value={false} onChange={this.handleChangePlatform}/>
+        <PlatformSelector
+          options={platforms}
+          value={this.state.params.platform}
+          onChange={this.handleChangePlatform}
+        />
+
         {games.length && (
           <GamesTable
             games={games}
