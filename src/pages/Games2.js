@@ -13,16 +13,36 @@ import { extractPageParamFromUrl } from '../components/helpers'
 class Games2 extends Component {
   state = {
     params: {
-        page: false,
-        per_page: false,
+      page: false,
+      per_page: false,
     },
     games: [],
     pagination: {},
   }
 
+  combineFetchParams = (stateParams) => {
+    let params = {}
+
+    if (stateParams.page) {
+      params = {
+        ...params,
+        page: stateParams.page,
+      }
+    }
+
+    if (stateParams.per_page) {
+      params = {
+        ...params,
+        page_size: stateParams.per_page,
+      }
+    }
+
+    return params
+  }
+
   fetchGames = () => {
     axios
-      .get('games')
+      .get('games', { params: this.combineFetchParams(this.state.params) })
       .then(response => {
         this.setState({
           games: response.data.data,
@@ -47,12 +67,36 @@ class Games2 extends Component {
     this.fetchGames()
   }
 
-   handleOnChangePage = (value) => {
-    console.log('fired change page ' + value)
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const shouldFetch =
+      (prevState.params.page !== undefined && prevState.params.page !== this.state.params.page) ||
+      (prevState.params.per_page !== undefined &&
+        prevState.params.per_page !== this.state.params.per_page)
+
+    if (shouldFetch) {
+      this.fetchGames()
+    }
   }
 
-   handleChangeRowsPerPage = () => {
-    console.log('fired change per page')
+  handleOnChangePage = page => {
+    this.setState({
+      params: {
+        ...this.state.params,
+        page,
+      },
+      // loading: true,
+    })
+  }
+
+  handleChangeRowsPerPage = event => {
+    this.setState({
+      params: {
+        ...this.state.params,
+        page: 1,
+        per_page: event.target.value,
+      },
+      //   loading: true,
+    })
   }
 
   render() {
