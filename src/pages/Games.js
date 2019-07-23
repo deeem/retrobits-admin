@@ -1,51 +1,58 @@
 import React, { Component } from 'react'
-import Table from '../components/Games/Table/Table'
+import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogTitle,
-} from '@material-ui/core'
+import { Button, Dialog, DialogActions, DialogTitle } from '@material-ui/core'
+import FetchGames from '../components/Games/FetchGames'
 
 class Games extends Component {
+  platforms = [
+    { id: 1, slug: 'zx', title: 'ZX-Spectrum' },
+    { id: 2, slug: 'nes', title: 'Nes' },
+    { id: 3, slug: 'snes', title: 'SNES' },
+    { id: 4, slug: 'smd', title: 'SEGA' },
+  ]
+
   state = {
     isOpenDeleteDialog: false,
     itemToDelete: null,
   }
 
-  handleCreate = () => {
+  onCreate = () => {
     this.props.history.push('/games/create')
   }
 
-  handleEdit = id => {
+  onEdit = id => {
     this.props.history.push(`/games/${id}`)
   }
 
-  handleDelete = id => {
+  onDelete = id => {
     this.setState({ itemToDelete: id, isOpenDeleteDialog: true })
   }
 
-  handleDeleteAbort = () => {
+  onDeleteAbort = () => {
     this.setState({ itemToDelete: null, isOpenDeleteDialog: false })
   }
 
-  handleDeleteConfirm = id => {
+  onDeleteConfirm = id => {
     console.log(`deletion confirmed form item ${id}`)
   }
 
   render() {
     const { isOpenDeleteDialog: open, itemToDelete: id } = this.state
-    const { handleCreate, handleEdit, handleDelete, handleDeleteAbort, handleDeleteConfirm } = this
+    const { platforms } = this
 
     const dialog = (
-      <Dialog open={open} onClose={handleDeleteAbort}>
+      <Dialog open={open} onClose={this.onDeleteAbort}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogActions>
-          <Button onClick={handleDeleteAbort} color="primary">
+          <Button onClick={this.onDeleteAbort} color="primary">
             Cancel
           </Button>
-          <Button onClick={() => handleDeleteConfirm(id)} color="secondary" autoFocus>
+          <Button
+            onClick={() => this.onDeleteConfirm(id)}
+            color="secondary"
+            autoFocus
+          >
             Confirm
           </Button>
         </DialogActions>
@@ -55,10 +62,17 @@ class Games extends Component {
     return (
       <>
         {dialog}
-        <Table onCreate={handleCreate} onEdit={handleEdit} onDelete={handleDelete} />
+        <FetchGames
+          platforms={platforms}
+          onCreate={this.onCreate}
+          onEdit={this.onEdit}
+          onDelete={this.onDelete}
+        />
       </>
     )
   }
 }
+
+Games.propTypes = {}
 
 export default withRouter(Games)

@@ -10,8 +10,8 @@ import {
   TableFooter,
   TablePagination,
 } from '@material-ui/core'
-import TablePaginationActions from '../components/TablePaginationAcitons'
-import {extractPageParamFromUrl} from '../components/helpers'
+import TablePaginationActions from '../components/Users/TablePaginationAcitons'
+import {extractPageParamFromUrl} from '../components/Users/helpers'
 
 const Users = () => {
   const [rows, setRows] = useState([])

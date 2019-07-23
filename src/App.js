@@ -4,7 +4,6 @@ import Layout from './components/Layout/Layout'
 import Dashboard from './pages/Dashboard'
 import Bits from './pages/Bits'
 import Games from './pages/Games'
-import Games2 from './pages/Games2'
 import Users from './pages/Users'
 import GameForm from './pages/GameForm'
 
@@ -15,8 +14,6 @@ function App() {
         <Route path="/bits" component={Bits} />
         <Route path="/games/:id" component={GameForm} />
         <Route path="/games" component={Games} />
-        <Route path="/games2" component={Games2} />
-
         <Route path="/users" component={Users} />
         <Route exact path="/" component={Dashboard} />
       </Switch>
