@@ -22,6 +22,8 @@ const GamesTable = ({
   onChangeRowsPerPage,
   titleSortOrder,
   onSortTitle,
+  onEdit,
+  onDelete,
 }) => {
   let table = (
     <Table>
@@ -46,12 +48,12 @@ const GamesTable = ({
             <TableCell align="right">{row.platform.title}</TableCell>
             <TableCell>{row.title}</TableCell>
             <TableCell style={{ width: '130px' }}>
-              {/* <IconButton onClick={() => this.props.onDelete(row.id)}>
+              <IconButton onClick={() => onDelete(row.id)}>
                 <DeleteIcon color="secondary" />
               </IconButton>
-              <IconButton onClick={() => this.props.onEdit(row.id)}>
+              <IconButton onClick={() => onEdit(row.id)}>
                 <EditIcon color="primary" />
-              </IconButton> */}
+              </IconButton>
             </TableCell>
           </TableRow>
         ))}
@@ -83,6 +85,8 @@ GamesTable.propTypes = {
   onChangeRowsPerPage: PropTypes.func.isRequired,
   titleSortOrder: PropTypes.string.isRequired,
   onSortTitle: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 }
 
 export default GamesTable

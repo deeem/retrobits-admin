@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Paper } from '@material-ui/core'
+import { Paper, IconButton } from '@material-ui/core'
+import { Add as AddIcon } from '@material-ui/icons'
 import { withStyles } from '@material-ui/core/styles'
 import {
   fetchPaginated,
@@ -109,7 +110,7 @@ class FetchGames extends Component {
       pagination,
       params: { platform, search_text, titleOrder },
     } = this.state
-    const { platforms } = this.props
+    const { platforms, onCreate, onEdit, onDelete } = this.props
 
     return (
       <Paper>
@@ -121,6 +122,10 @@ class FetchGames extends Component {
           />
 
           <SearchField value={search_text} onChange={this.onChangeSearch} />
+
+          <IconButton onClick={onCreate}>
+            <AddIcon />
+          </IconButton>
         </div>
 
         {data.length && (
@@ -131,6 +136,8 @@ class FetchGames extends Component {
             onChangeRowsPerPage={this.onChangeRowsPerPage}
             titleSortOrder={titleOrder}
             onSortTitle={this.onSortTitle}
+            onEdit={onEdit}
+            onDelete={onDelete}
           />
         )}
       </Paper>
@@ -140,6 +147,9 @@ class FetchGames extends Component {
 
 FetchGames.propTypes = {
   platforms: PropTypes.array.isRequired,
+  onCreate: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(FetchGames)
