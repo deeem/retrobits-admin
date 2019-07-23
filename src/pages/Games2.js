@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import GamesList from '../components/Games2/GamesList'
+import FetchGames from '../components/Games2/FetchGames'
 
 class Games2 extends Component {
   platforms = [
@@ -13,7 +13,7 @@ class Games2 extends Component {
   render() {
     return (
       <>
-        <GamesList platforms={this.platforms} />
+        <FetchGames platforms={this.platforms} />
       </>
     )
   }

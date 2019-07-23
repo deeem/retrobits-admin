@@ -81,6 +81,8 @@ GamesTable.propTypes = {
   pagination: PropTypes.object.isRequired,
   onChangePage: PropTypes.func.isRequired,
   onChangeRowsPerPage: PropTypes.func.isRequired,
+  titleSortOrder: PropTypes.string.isRequired,
+  onSortTitle: PropTypes.func.isRequired,
 }
 
 export default GamesTable
