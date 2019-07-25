@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { FormControl, InputLabel, Select, MenuItem, TextField } from '@material-ui/core'
+import { FormControl, MenuItem, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(theme => ({
@@ -10,14 +10,14 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const PlatformSelector = ({options, value, onChange }) => {
+const PlatformSelector = ({ options, value, onChange }) => {
   const classes = useStyles()
 
   return (
     <>
       <FormControl className={classes.formControl}>
         <TextField
-        //   className={classes.platform}
+          //   className={classes.platform}
           select
           label="select"
           value={value}
