@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { Button, Dialog, DialogActions, DialogTitle } from '@material-ui/core'
-import FetchGames from '../components/Games/FetchGames'
+import FetchGames from '../components/Games/Fetch/FetchGames'
 
 class Games extends Component {
   platforms = [

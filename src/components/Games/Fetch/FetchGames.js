@@ -7,7 +7,7 @@ import {
   fetchPaginated,
   shouldFetch,
   updateParams,
-} from '../../axios-retrobits'
+} from '../../../axios-retrobits'
 import GamesTable from './GamesTable'
 import PlatformSelector from './PlatformSelector'
 import SearchField from './SearchField'

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import axios from '../axios-retrobits'
-import EditGame from '../components/Games/Modify/EditGame'
+import Form from '../components/Games/Modify/Form'
 
-class GameForm2 extends Component {
+class GameEdit extends Component {
   platforms = [
     { id: 1, slug: 'zx', title: 'ZX-Spectrum' },
     { id: 2, slug: 'nes', title: 'Nes' },
@@ -84,7 +84,7 @@ class GameForm2 extends Component {
 
     if (loading === false && mode === 'create') {
       form = (
-        <EditGame
+        <Form
           platforms={this.platforms}
           onSubmit={this.handleSubmit}
           onDeleteImage={this.handleDeleteImage}
@@ -92,7 +92,7 @@ class GameForm2 extends Component {
       )
     } else if (loading === false && mode === 'edit') {
       form = (
-        <EditGame
+        <Form
           platforms={this.platforms}
           title={game.title}
           description={game.description}
@@ -109,4 +109,4 @@ class GameForm2 extends Component {
   }
 }
 
-export default GameForm2
+export default GameEdit

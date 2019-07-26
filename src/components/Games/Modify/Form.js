@@ -58,7 +58,7 @@ const styles = theme => ({
   },
 })
 
-class EditGame extends Component {
+class Form extends Component {
   state = {
     title: this.props.title,
     description: this.props.description,
@@ -182,7 +182,7 @@ class EditGame extends Component {
   }
 }
 
-EditGame.defaultProps = {
+Form.defaultProps = {
   title: '',
   description: '',
   platform: '',
@@ -190,7 +190,7 @@ EditGame.defaultProps = {
   images: null,
 }
 
-EditGame.propTypes = {
+Form.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onDeleteImage: PropTypes.func.isRequired,
   platforms: PropTypes.array.isRequired,
@@ -201,4 +201,4 @@ EditGame.propTypes = {
   images: PropTypes.array,
 }
 
-export default withStyles(styles)(EditGame)
+export default withStyles(styles)(Form)
