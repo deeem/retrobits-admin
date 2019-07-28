@@ -3,14 +3,11 @@ import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import TextField from '@material-ui/core/TextField'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
-import Link from '@material-ui/core/Link'
-import Grid from '@material-ui/core/Grid'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
+import { validate } from '../helpers/validation'
 
 const styles = theme => ({
   '@global': {
@@ -38,9 +35,41 @@ const styles = theme => ({
 })
 
 class Login extends Component {
-  render() {
+  state = {
+    email: '',
+    password: '',
+    errors: {},
+  }
 
+  onChange = e => this.setState({ [e.target.name]: e.target.value })
+
+  onSubmit = e => {
+    e.preventDefault()
+
+    const errors = {}
+    const { email, password } = this.state
+    if (!validate['required'](email)) {
+      errors.email = 'This field is required'
+    } else if (!validate['email'](email)) {
+      errors.email = 'This is not looks like email'
+    } else {
+      delete errors.email
+    }
+
+    if (!validate['required'](password)) {
+      errors.password = 'This field is required'
+    } else if (!validate['min'](password, 3)) {
+      errors.password = 'Password is too short'
+    } else {
+      delete errors.password
+    }
+
+    this.setState({ errors })
+  }
+
+  render() {
     const { classes } = this.props
+    const { errors, email, password } = this.state
 
     return (
       <Container component="main" maxWidth="xs">
@@ -52,7 +81,7 @@ class Login extends Component {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} noValidate onSubmit={this.onSubmit}>
             <TextField
               variant="outlined"
               margin="normal"
@@ -63,6 +92,10 @@ class Login extends Component {
               name="email"
               autoComplete="email"
               autoFocus
+              value={email}
+              onChange={this.onChange}
+              error={'email' in errors}
+              helperText={errors.email}
             />
             <TextField
               variant="outlined"
@@ -74,10 +107,10 @@ class Login extends Component {
               type="password"
               id="password"
               autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+              value={password}
+              onChange={this.onChange}
+              error={'password' in errors}
+              helperText={errors.password}
             />
             <Button
               type="submit"
@@ -88,14 +121,6 @@ class Login extends Component {
             >
               Sign In
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item />
-            </Grid>
           </form>
         </div>
       </Container>
