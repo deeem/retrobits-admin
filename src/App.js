@@ -11,13 +11,13 @@ import Login from './pages/Login'
 function App() {
   return (
     <Switch>
-      <Route path="/" exact component={Login} />
+      <Route path="/login" component={Login} />
       <Layout>
-        <Route path="/dashboard" component={Dashboard} />
         <Route path="/bits" component={Bits} />
         <Route path="/games/:id" component={GameEdit} />
         <Route path="/games" component={Games} />
         <Route path="/users" component={Users} />
+        <Route path="/" exact component={Dashboard} />
       </Layout>
     </Switch>
   )
