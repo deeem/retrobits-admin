@@ -22,7 +22,7 @@ class App extends Component {
         <Layout>
           <Route path="/bits" component={Bits} />
           <Route path="/games/:id" component={GameEdit} />
-          <Route path="/games" component={Games} />
+          <Route path="/games" exact component={Games} />
           <Route path="/users" component={Users} />
           <Route path="/" exact component={Dashboard} />
         </Layout>
