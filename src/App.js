@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom'
 import Layout from './components/Layout/Layout'
 import Dashboard from './pages/Dashboard'
 import Bits from './pages/Bits'
@@ -16,7 +16,7 @@ class App extends Component {
   }
 
   render() {
-    return (
+    const routes = this.props.isAuthenticated ? (
       <Switch>
         <Route path="/login" component={Login} />
         <Layout>
@@ -27,7 +27,13 @@ class App extends Component {
           <Route path="/" exact component={Dashboard} />
         </Layout>
       </Switch>
+    ) : (
+      <Switch>
+        <Route path="/login" component={Login} />
+        <Redirect to="/login"/>
+      </Switch>
     )
+    return <>{routes}</>
   }
 }
 
