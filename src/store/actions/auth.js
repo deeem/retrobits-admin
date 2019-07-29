@@ -1,6 +1,5 @@
 import * as actionTypes from './actionTypes'
-import axios from '../../axios-retrobits'
-import { isSuper } from '@babel/types'
+import axios from '../../axios-auth'
 
 export const authStart = () => {
   return {
@@ -22,20 +21,12 @@ export const authFail = error => {
   }
 }
 
-export const auth = (name, email, password, isSignup) => {
+export const auth = (email, password) => {
   return dispatch => {
     dispatch(authStart())
 
-    // const authData = {
-    //   name: name,
-    //   email: email,
-    //   password: password,
-    // }
-
-    // let url = isSignup ? 'register' : 'login'
-
     axios
-      .post(isSignup ? 'register' : 'login', { name, email, password })
+      .post('login', { email, password })
       .then(response => {
         localStorage.setItem('token', response.data.token)
         dispatch(authSuccess(response.data.token))

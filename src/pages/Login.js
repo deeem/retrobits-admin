@@ -8,6 +8,9 @@ import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import { validate } from '../helpers/validation'
+import { connect } from 'react-redux'
+import * as actions from '../store/actions/index'
+import { Redirect } from 'react-router-dom'
 
 const styles = theme => ({
   '@global': {
@@ -46,8 +49,11 @@ class Login extends Component {
   onSubmit = e => {
     e.preventDefault()
 
-    const errors = {}
     const { email, password } = this.state
+    const { onAuth } = this.props
+
+    const errors = {}
+
     if (!validate['required'](email)) {
       errors.email = 'This field is required'
     } else if (!validate['email'](email)) {
@@ -64,68 +70,95 @@ class Login extends Component {
       delete errors.password
     }
 
-    this.setState({ errors })
+    if (Object.keys(errors).length) {
+      this.setState({ errors })
+    } else {
+      onAuth(email, password)
+    }
   }
 
   render() {
-    const { classes } = this.props
+    const { classes, isAuthenticated } = this.props
     const { errors, email, password } = this.state
 
     return (
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <form className={classes.form} noValidate onSubmit={this.onSubmit}>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              value={email}
-              onChange={this.onChange}
-              error={'email' in errors}
-              helperText={errors.email}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={this.onChange}
-              error={'password' in errors}
-              helperText={errors.password}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              Sign In
-            </Button>
-          </form>
-        </div>
-      </Container>
+      <>
+        {isAuthenticated && <Redirect to="/" />}
+
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <form className={classes.form} noValidate onSubmit={this.onSubmit}>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                value={email}
+                onChange={this.onChange}
+                error={'email' in errors}
+                helperText={errors.email}
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={this.onChange}
+                error={'password' in errors}
+                helperText={errors.password}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Sign In
+              </Button>
+            </form>
+          </div>
+        </Container>
+      </>
     )
   }
 }
 
-export default withStyles(styles)(Login)
+const mapStateToProps = state => {
+  return {
+    loading: state.auth.loading,
+    error: state.auth.error,
+    isAuthenticated: state.auth.token !== null,
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onAuth: (email, password) => dispatch(actions.auth(email, password)),
+  }
+}
+
+export default withStyles(styles)(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(Login),
+)
